@@ -45,4 +45,12 @@ public class PrimeResult {
     public int hashCode() {
         return Objects.hash(integer, primeFlag);
     }
+
+    @Override
+    public String toString() {
+        return "PrimeResult{" +
+                "integer=" + integer +
+                ", isPrime=" + isPrime() +
+                '}';
+    }
 }

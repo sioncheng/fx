@@ -12,8 +12,12 @@ public class PrimeResultSerializer {
     }
 
     public static PrimeResult deserialize(byte[] bytes) {
-        int val = IntegerSerializer.deserialize(bytes, 0);
-        int flag = IntegerSerializer.deserialize(bytes, 4);
+        return deserialize(bytes, 0);
+    }
+
+    public static PrimeResult deserialize(byte[] bytes, int offset) {
+        int val = IntegerSerializer.deserialize(bytes, offset);
+        int flag = IntegerSerializer.deserialize(bytes, offset + 4);
         return new PrimeResult(val, flag);
     }
 }
