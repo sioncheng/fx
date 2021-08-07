@@ -4,6 +4,7 @@ import iamdev.fx.common.IntegerSerializer;
 import iamdev.fx.common.PrimeResult;
 import iamdev.fx.common.PrimeResultSerializer;
 import iamdev.fx.common.ThreadUtil;
+import iamdev.fx.queue.MappedFileQueue;
 import iamdev.fx.queue.Queue;
 
 import java.util.concurrent.*;
@@ -21,8 +22,8 @@ public class Prime {
 
         int capacity = 1024;
 
-        Queue integerQueue = Queue.create(args[0], capacity);
-        Queue primeResultQueue = Queue.create(args[1], capacity);
+        Queue integerQueue = MappedFileQueue.create(args[0], capacity);
+        Queue primeResultQueue = MappedFileQueue.create(args[1], capacity);
 
 
         Thread t = new Thread(new Runnable() {

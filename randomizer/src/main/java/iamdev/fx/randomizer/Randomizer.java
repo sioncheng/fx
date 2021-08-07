@@ -4,6 +4,7 @@ import iamdev.fx.common.IntegerSerializer;
 import iamdev.fx.common.PrimeResult;
 import iamdev.fx.common.PrimeResultSerializer;
 import iamdev.fx.common.ThreadUtil;
+import iamdev.fx.queue.MappedFileQueue;
 import iamdev.fx.queue.Queue;
 
 import java.util.concurrent.CountDownLatch;
@@ -26,8 +27,8 @@ public class Randomizer {
         int cacheLine = 64;
         int batch = cacheLine / INTEGER_BYTES_SIZE;
 
-        Queue integerQueue = Queue.create(args[0], capacity);
-        Queue primeResultQueue = Queue.create(args[1], capacity);
+        Queue integerQueue = MappedFileQueue.create(args[0], capacity);
+        Queue primeResultQueue = MappedFileQueue.create(args[1], capacity);
 
         Thread t2 = new Thread(new Runnable() {
             @Override

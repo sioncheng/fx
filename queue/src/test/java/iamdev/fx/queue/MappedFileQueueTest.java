@@ -12,7 +12,7 @@ import java.nio.file.Paths;
  * @author cyq
  * @create 2021-08-07 5:50 PM
  */
-public class QueueTest {
+public class MappedFileQueueTest {
 
     @Test
     public void testPutGet() throws IOException {
@@ -21,7 +21,7 @@ public class QueueTest {
         Files.deleteIfExists(path);
         Files.createDirectories(path);
 
-        Queue queue = Queue.create("/tmp/q1", 1024);
+        MappedFileQueue queue = MappedFileQueue.create("/tmp/q1", 1024);
 
         Assert.assertNotNull(queue);
 
@@ -61,7 +61,7 @@ public class QueueTest {
         int block = 8;
         int n = capacity / 8;
 
-        Queue queue = Queue.create("/tmp/q2/", capacity);
+        MappedFileQueue queue = MappedFileQueue.create("/tmp/q2/", capacity);
 
         Assert.assertNotNull(queue);
 
