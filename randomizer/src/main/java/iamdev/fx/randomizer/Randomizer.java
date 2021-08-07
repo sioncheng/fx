@@ -5,7 +5,6 @@ import iamdev.fx.common.PrimeResult;
 import iamdev.fx.common.PrimeResultSerializer;
 import iamdev.fx.queue.Queue;
 
-import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -68,7 +67,6 @@ public class Randomizer {
                     int w = 0;
                     while (w <= 0) {
                         w = integerQueue.put(result);
-                        System.out.println(String.format("put %d", w));
                         try {
                             Thread.sleep(10);
                         } catch (Exception ex) {}

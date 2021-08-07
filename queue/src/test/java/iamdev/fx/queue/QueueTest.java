@@ -4,6 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author cyq
@@ -14,14 +17,18 @@ public class QueueTest {
     @Test
     public void testPutGet() throws IOException {
 
-        Queue queue = Queue.create("/tmp/d", 1024);
+        Path path = Paths.get("/tmp/q1");
+        Files.deleteIfExists(path);
+        Files.createDirectories(path);
+
+        Queue queue = Queue.create("/tmp/q1", 1024);
 
         Assert.assertNotNull(queue);
 
         byte[] bytes = new byte[1023];
         int w = queue.put(bytes);
 
-        Assert.assertEquals(w, 1023);
+        Assert.assertEquals(1023, w);
         Assert.assertEquals(1, queue.getSpace());
         Assert.assertEquals(0, queue.getHead());
         Assert.assertEquals(1023, queue.getTail());
@@ -39,17 +46,22 @@ public class QueueTest {
         Assert.assertEquals(0, queue.getRemains());
 
         queue.close();
+        queue.clear();
     }
 
 
     @Test
     public void testPutGetMulti() throws IOException {
 
+        Path path = Paths.get("/tmp/q2");
+        Files.deleteIfExists(path);
+        Files.createDirectories(path);
+
         int capacity = 512;
         int block = 8;
         int n = capacity / 8;
 
-        Queue queue = Queue.create("/tmp/d", capacity);
+        Queue queue = Queue.create("/tmp/q2/", capacity);
 
         Assert.assertNotNull(queue);
 
@@ -77,6 +89,7 @@ public class QueueTest {
 
 
         queue.close();
+        queue.clear();
     }
 
 }
