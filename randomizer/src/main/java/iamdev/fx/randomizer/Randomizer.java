@@ -3,6 +3,7 @@ package iamdev.fx.randomizer;
 import iamdev.fx.common.IntegerSerializer;
 import iamdev.fx.common.PrimeResult;
 import iamdev.fx.common.PrimeResultSerializer;
+import iamdev.fx.common.ThreadUtil;
 import iamdev.fx.queue.Queue;
 
 import java.util.concurrent.CountDownLatch;
@@ -34,9 +35,7 @@ public class Randomizer {
                 while (true) {
                     byte[] result = primeResultQueue.get(PRIME_RESULT_BYTES_SIZE);
                     if (null == result) {
-                        try {
-                            Thread.sleep(10);
-                        } catch (Exception ex) {}
+                        ThreadUtil.safeYield();
                         continue;
                     }
                     int prs = result.length / PRIME_RESULT_BYTES_SIZE;
@@ -64,12 +63,11 @@ public class Randomizer {
                         System.arraycopy(bytes, 0, result, offset, INTEGER_BYTES_SIZE);
                         offset += INTEGER_BYTES_SIZE;
                     }
+
                     int w = 0;
                     while (w <= 0) {
                         w = integerQueue.put(result);
-                        try {
-                            Thread.sleep(10);
-                        } catch (Exception ex) {}
+                        ThreadUtil.safeYield();
                     }
                 }
             }

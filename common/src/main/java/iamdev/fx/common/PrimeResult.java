@@ -2,6 +2,8 @@ package iamdev.fx.common;
 
 import java.util.Objects;
 
+import static iamdev.fx.common.Constants.PRIME_FLAG_TRUE;
+
 public class PrimeResult {
 
     private Integer integer;
@@ -30,7 +32,7 @@ public class PrimeResult {
     }
 
     public boolean isPrime() {
-        return null != this.primeFlag && 0 == this.primeFlag.intValue();
+        return null != this.primeFlag && PRIME_FLAG_TRUE == this.primeFlag.intValue();
     }
 
     @Override

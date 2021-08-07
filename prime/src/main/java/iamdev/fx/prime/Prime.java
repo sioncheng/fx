@@ -3,6 +3,7 @@ package iamdev.fx.prime;
 import iamdev.fx.common.IntegerSerializer;
 import iamdev.fx.common.PrimeResult;
 import iamdev.fx.common.PrimeResultSerializer;
+import iamdev.fx.common.ThreadUtil;
 import iamdev.fx.queue.Queue;
 
 import java.util.concurrent.*;
@@ -34,10 +35,7 @@ public class Prime {
                 while (true) {
                     byte[] bytes = integerQueue.get(INTEGER_BYTES_SIZE);
                     if (null == bytes) {
-                        try {
-                            Thread.sleep(10);
-                        } catch (Exception ex) {
-                        }
+                        ThreadUtil.safeYield();
                         continue;
                     }
 
@@ -76,10 +74,7 @@ public class Prime {
                     int w = 0;
                     while (w <= 0) {
                         w = primeResultQueue.put(results);
-                        try {
-                            Thread.sleep(10);
-                        } catch (Exception ex) {
-                        }
+                        ThreadUtil.safeYield();
                     }
                 }
             }
