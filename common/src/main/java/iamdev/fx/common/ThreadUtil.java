@@ -8,7 +8,7 @@ public class ThreadUtil {
 
     public static void safeYield() {
         try {
-            Thread.sleep(1);
+            Thread.sleep(10);
         } catch (Exception ex) {}
     }
 }

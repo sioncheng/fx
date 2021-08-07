@@ -30,7 +30,22 @@ public class Randomizer {
         Queue integerQueue = MappedFileQueue.create(args[0], capacity);
         Queue primeResultQueue = MappedFileQueue.create(args[1], capacity);
 
-        Thread t2 = new Thread(new Runnable() {
+
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    integerQueue.close();
+                } catch (Exception e) {
+                }
+                try {
+                    primeResultQueue.close();
+                } catch (Exception e) {
+                }
+            }
+        }));
+
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 while (true) {
@@ -41,7 +56,7 @@ public class Randomizer {
                     }
                     int prs = result.length / PRIME_RESULT_BYTES_SIZE;
                     int offset = 0;
-                    for (int i = 0; i< prs; i++) {
+                    for (int i = 0; i < prs; i++) {
                         PrimeResult primeResult = PrimeResultSerializer.deserialize(result, offset);
                         offset += PRIME_RESULT_BYTES_SIZE;
                         System.out.println(primeResult);
@@ -49,46 +64,26 @@ public class Randomizer {
                 }
             }
         });
-        t2.setDaemon(true);
-        t2.start();
+        t.setDaemon(true);
+        t.start();
 
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    byte[] result = new byte[cacheLine];
-                    int offset = 0;
-                    for (int i = 0; i < batch; i++) {
-                        int r = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
-                        byte[] bytes = IntegerSerializer.serialize(r);
-                        System.arraycopy(bytes, 0, result, offset, INTEGER_BYTES_SIZE);
-                        offset += INTEGER_BYTES_SIZE;
-                    }
 
-                    int w = 0;
-                    while (w <= 0) {
-                        w = integerQueue.put(result);
-                        ThreadUtil.safeYield();
-                    }
-                }
+        while (true) {
+            byte[] result = new byte[cacheLine];
+            int offset = 0;
+            for (int i = 0; i < batch; i++) {
+                int r = ThreadLocalRandom.current().nextInt(Integer.MAX_VALUE);
+                byte[] bytes = IntegerSerializer.serialize(r);
+                System.arraycopy(bytes, 0, result, offset, INTEGER_BYTES_SIZE);
+                offset += INTEGER_BYTES_SIZE;
             }
-        });
-        t1.setDaemon(true);
-        t1.start();
 
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    integerQueue.close();
-                } catch (Exception e) {}
-                try {
-                    primeResultQueue.close();
-                } catch (Exception e) {}
+            int w = 0;
+            while (w <= 0) {
+                w = integerQueue.put(result);
+                ThreadUtil.safeYield();
             }
-        }));
-
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        countDownLatch.await();
+        }
     }
+    
 }
